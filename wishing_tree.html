@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dilek Ağacı - Emre & İrem Wedding</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            animation: fadeIn 2s ease-in;
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .wish-container {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .wish {
+            position: absolute;
+            background: #fff;
+            border-radius: 15px;
+            padding: 15px;
+            min-width: 120px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.4em;
+            color: #333;
+            animation: floatDown linear infinite;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .wish:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .wish:nth-child(odd) {
+            background-color: #ffe6b3;
+        }
+
+        .wish:nth-child(even) {
+            background-color: #ffc9c9;
+        }
+
+        @keyframes floatDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(100vh);
+                opacity: 0.7;
+            }
+        }
+
+        /* Rastgele zamanlamalar ve hızlar */
+        .wish:nth-child(1) { animation-duration: 12s; animation-delay: 0s; }
+        .wish:nth-child(2) { animation-duration: 15s; animation-delay: 3s; }
+        .wish:nth-child(3) { animation-duration: 10s; animation-delay: 1s; }
+        .wish:nth-child(4) { animation-duration: 18s; animation-delay: 5s; }
+        .wish:nth-child(5) { animation-duration: 14s; animation-delay: 2s; }
+        /* Daha fazla dilek için benzer şekilde devam edebiliriz */
+
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+
+        .modal h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            display: inline-block;
+            background-color: #ff7f50;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .wish-form {
+            text-align: center;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .wish-form input[type="text"],
+        .wish-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            background: #f9f9f9;
+            transition: border-color 0.3s;
+        }
+
+        .wish-form input[type="text"]:focus,
+        .wish-form textarea:focus {
+            border-color: #ff7f50;
+            outline: none;
+        }
+
+        .wish-form button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #ff7f50;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .wish-form button:hover {
+            background-color: #ff6f40;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dilek Ağacı</h1>
+        <div class="wish-container" id="wishContainer"></div>
+
+        <div class="modal" id="wishModal">
+            <h2 id="modalTitle"></h2>
+            <p id="modalMessage"></p>
+            <div class="close-modal" id="closeModal">Kapat</div>
+        </div>
+
+        <div class="wish-form">
+            <input type="text" id="wishName" placeholder="Adınız" required>
+            <textarea id="wishMessage" placeholder="Dileğiniz" rows="4" required></textarea>
+            <button id="submitWish">Dileğini Ekle</button>
+        </div>
+    </div>
+
+    <script>
+        function getRandomPosition(maxWidth) {
+            const x = Math.floor(Math.random() * maxWidth) + 'px';
+            return { x };
+        }
+
+        function createWishElement(wish) {
+            const wishElement = document.createElement('div');
+            wishElement.classList.add('wish');
+            wishElement.textContent = wish.name;
+
+            const maxWidth = window.innerWidth - 150;  // wish width
+            const position = getRandomPosition(maxWidth);
+            wishElement.style.left = position.x;
+
+            wishElement.addEventListener('click', () => {
+                openModal(wish);
+            });
+
+            return wishElement;
+        }
+
+        function openModal(wish) {
+            document.getElementById('modalTitle').textContent = wish.name;
+            document.getElementById('modalMessage').textContent = wish.message;
+            document.getElementById('wishModal').style.display = 'block';
+        }
+
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('wishModal').style.display = 'none';
+        });
+
+        document.getElementById('submitWish').addEventListener('click', function() {
+            const name = document.getElementById('wishName').value;
+            const message = document.getElementById('wishMessage').value;
+
+            if (name && message) {
+                const data = { name: name, message: message };
+
+                fetch('http://localhost:3000/submit_wish', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Dilek başarıyla eklendi!') {
+                        const wishElement = createWishElement(data.wish);
+                        document.getElementById('wishContainer').appendChild(wishElement);
+                        document.getElementById('wishName').value = '';
+                        document.getElementById('wishMessage').value = '';
+                    } else {
+                        alert('Dilek eklenirken bir hata oluştu.');
+                    }
+                });
+            } else {
+                alert('Lütfen tüm alanları doldurun.');
+            }
+        });
+
+        // Sayfa yüklendiğinde mevcut dilekleri çek ve ekle
+        window.onload = function() {
+            fetch('http://localhost:3000/get_wishes')
+            .then(response => response.json())
+            .then(data => {
+                const wishContainer = document.getElementById('wishContainer');
+                data.forEach(wish => {
+                    const wishElement = createWishElement(wish);
+                    wishContainer.appendChild(wishElement);
+                });
+            });
+        };
+    </script>
+</body>
+</html>
