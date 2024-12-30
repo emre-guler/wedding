@@ -23,7 +23,7 @@ A web application for collecting and sharing wedding memories, including photos,
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/emre-guler/emreirem-wedding.git
+git clone https://github.com/emre-guler/wedding.git
 cd wedding-memory-app
 ```
 
