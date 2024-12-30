@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notlar - Emre & İrem Wedding</title>
+    <title>Notes - Emre & İrem Wedding</title>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -39,10 +39,13 @@
             }
         }
 
-        h1 {
+        h1, h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 24px;
             color: #333;
+        }
+
+        h1 {
+            font-size: 24px;
             margin-bottom: 20px;
         }
 
@@ -68,63 +71,6 @@
             box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
         }
 
-        .guest-list {
-            display: none;
-            margin-top: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.8);
-        }
-
-        .guest-item {
-            display: flex;
-            align-items: center;
-            margin: 5px 0;
-            padding: 10px;
-            background: rgba(245, 245, 245, 0.8);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .guest-item:hover {
-            background: rgba(240, 240, 240, 0.9);
-        }
-
-        .guest-item img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .guest-item span {
-            font-size: 16px;
-            color: #333;
-        }
-
-        .guest-details {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .guest-details img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-        }
-
-        .guest-details video {
-            width: 100%;
-            max-width: 500px;
-            border-radius: 15px;
-        }
-
         .note-form {
             display: none;
             margin-top: 20px;
@@ -136,10 +82,8 @@
         }
 
         .note-form h2 {
-            font-family: 'Playfair Display', serif;
             font-size: 24px;
             font-weight: 700;
-            color: #333;
             margin-bottom: 20px;
             text-align: center;
         }
@@ -171,7 +115,7 @@
         }
 
         .note-form input[type="file"] {
-            display: none; /* Dosya input gizleniyor */
+            display: none;
         }
 
         .note-form label[for="guestVideo"] {
@@ -215,60 +159,30 @@
 </head>
 <body>
     <div class="container">
-        <h1>Davetli Notları</h1>
-        <a href="#" class="button" id="noteButton">Not Bırak</a>
+        <h1>Guest Notes</h1>
+        <a href="#" class="button" id="noteButton">Leave a Note</a>
 
-        <!-- Not Bırakma Formu -->
         <div id="noteForm" class="note-form">
-            <h2>Not Bırak</h2>
-            <label for="guestName">Adınız</label>
-            <input type="text" id="guestName" placeholder="Adınız" required>
+            <h2>Leave a Note</h2>
+            <label for="guestName">Your Name</label>
+            <input type="text" id="guestName" placeholder="Your Name" required>
             
-            <label for="guestNote">Notunuz</label>
-            <textarea id="guestNote" placeholder="Notunuz" rows="4" required></textarea>
+            <label for="guestNote">Your Note</label>
+            <textarea id="guestNote" placeholder="Your Note" rows="4" required></textarea>
             
-            <label for="guestVideo">Video Yükleyin</label>
+            <label for="guestVideo">Upload Video</label>
             <input type="file" id="guestVideo" accept="video/*" required>
             
-            <button id="submitNote">Gönder</button>
+            <button id="submitNote">Submit</button>
         </div>
     </div>
 
     <script>
-        const kizTarafiButton = document.getElementById('kizTarafiButton');
         const noteButton = document.getElementById('noteButton');
-        const erkekTarafiList = document.getElementById('erkekTarafiList');
-        const kizTarafiList = document.getElementById('kizTarafiList');
-        const guestDetails = document.getElementById('guestDetails');
         const noteForm = document.getElementById('noteForm');
-        const guestItems = document.querySelectorAll('.guest-item');
-
 
         noteButton.addEventListener('click', function() {
             noteForm.style.display = 'block';
-            kizTarafiList.style.display = 'none';
-            erkekTarafiList.style.display = 'none';
-            guestDetails.style.display = 'none';
-        });
-
-        guestItems.forEach(item => {
-            item.addEventListener('click', function() {
-                guestDetails.style.display = 'block';
-                kizTarafiList.style.display = 'none';
-                erkekTarafiList.style.display = 'none';
-                noteForm.style.display = 'none';
-
-                const guestName = item.querySelector('span').textContent;
-                const guestImage = item.querySelector('img').src;
-                const guestVideo = item.getAttribute('data-video');
-                
-                guestDetails.querySelector('img').src = guestImage;
-                guestDetails.querySelector('strong').textContent = guestName;
-
-                const videoElement = guestDetails.querySelector('video');
-                videoElement.querySelector('source').src = guestVideo;
-                videoElement.load();
-            });
         });
 
         document.getElementById('submitNote').addEventListener('click', function() {
@@ -287,16 +201,16 @@
                     body: formData
                 }).then(response => response.json())
                 .then(data => {
-                    alert('Notunuz başarıyla gönderildi!');
+                    alert('Your note has been submitted successfully!');
                     document.getElementById('guestName').value = '';
                     document.getElementById('guestNote').value = '';
                     document.getElementById('guestVideo').value = '';
                     noteForm.style.display = 'none';
                 }).catch(error => {
-                    alert('Not gönderilirken bir hata oluştu.');
+                    alert('An error occurred while submitting your note.');
                 });
             } else {
-                alert('Lütfen tüm alanları doldurunuz.');
+                alert('Please fill in all fields.');
             }
         });
     </script>

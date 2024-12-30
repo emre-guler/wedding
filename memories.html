@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anılar - Emre & İrem Wedding</title>
+    <title>Memories - Emre & İrem Wedding</title>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -24,7 +24,7 @@
             width: 80%;
             max-width: 800px;
             animation: fadeIn 2s ease-in;
-            position: relative; /* Spinner ve mesaj için gerekli */
+            position: relative;
         }
 
         @keyframes fadeIn {
@@ -99,7 +99,6 @@
             height: 100%;
         }
 
-        /* Loading Spinner Stili */
         .spinner {
             position: absolute;
             top: 50%;
@@ -111,7 +110,7 @@
             width: 60px;
             height: 60px;
             animation: spin 1s linear infinite;
-            display: none; /* Başlangıçta gizli */
+            display: none;
             z-index: 10;
         }
 
@@ -120,7 +119,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Yükleme Tamamlandı Mesajı Stili */
         .upload-complete {
             position: absolute;
             top: 10px;
@@ -129,24 +127,22 @@
             color: white;
             padding: 10px 20px;
             border-radius: 50px;
-            display: none; /* Başlangıçta gizli */
+            display: none;
             z-index: 10;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Anılar</h1>
+        <h1>Memories</h1>
         <div class="upload-section">
             <input type="file" id="fileInput" multiple accept="image/*,video/*">
-            <label for="fileInput">Anı Yükle</label>
-            <!-- Loading Spinner -->
+            <label for="fileInput">Upload Memory</label>
             <div class="spinner" id="spinner"></div>
-            <!-- Yükleme Tamamlandı Mesajı -->
-            <div class="upload-complete" id="uploadComplete">Bitti!</div>
+            <div class="upload-complete" id="uploadComplete">Done!</div>
         </div>
         <div class="gallery" id="gallery">
-            <!-- Yüklenen dosyalar buraya eklenecek -->
+            <!-- Uploaded files will be added here -->
         </div>
     </div>
 
@@ -164,29 +160,24 @@
                 const formData = new FormData();
                 formData.append('file', file);
 
-                // Spinner'ı Göster
                 spinner.style.display = 'block';
                 uploadComplete.style.display = 'none';
 
-                // Dosyayı backend'e gönder
                 fetch('https://www.emreirem.wedding/pythonbackend/upload', {
                     method: 'POST',
                     body: formData
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Başarı:', data);
+                    console.log('Success:', data);
                     
-                    // Spinner'ı Gizle ve Mesajı Göster
                     spinner.style.display = 'none';
                     uploadComplete.style.display = 'block';
 
-                    // Mesajı belli bir süre sonra gizle
                     setTimeout(() => {
                         uploadComplete.style.display = 'none';
-                    }, 3000); // 3 saniye sonra gizler
+                    }, 3000);
 
-                    // Dosya yüklendi, şimdi galeride göster
                     const fileURL = URL.createObjectURL(file);
                     const galleryItem = document.createElement('div');
                     galleryItem.classList.add('gallery-item');
@@ -205,9 +196,9 @@
                     gallery.appendChild(galleryItem);
                 })
                 .catch(error => {
-                    console.error('Hata:', error);
+                    console.error('Error:', error);
                     spinner.style.display = 'none';
-                    alert('Dosya yükleme sırasında bir hata oluştu.');
+                    alert('An error occurred while uploading the file.');
                 });
             }
         });

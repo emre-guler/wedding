@@ -7,17 +7,16 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Yüklenen dosyaların kaydedileceği dizin
+# Directory for uploaded files
 UPLOAD_FOLDER = './uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Yalnızca izin verilen dosya uzantıları
+# Allowed file extensions
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'avi', 'mov'}
 
 WISHES_FILE = os.path.join(UPLOAD_FOLDER, 'wishes.json')
 
-
-# Dosya uzantısının izin verilip verilmediğini kontrol et
+# Check if file extension is allowed
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -46,13 +45,13 @@ def submit_wish():
     wish = {'name': name, 'message': message}
     wishes.append(wish)
     save_wishes(wishes)
-    return jsonify({'message': 'Dilek başarıyla eklendi!', 'wish': wish}), 200
+    return jsonify({'message': 'Wish added successfully!', 'wish': wish}), 200
 
 @app.route('/get_wishes', methods=['GET'])
 def get_wishes():
     return jsonify(wishes), 200
 
-# Dosya yükleme endpoint'i
+# File upload endpoint
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -65,19 +64,19 @@ def upload_file():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         return jsonify({
-            'message': 'Dosya başarıyla yüklendi!',
+            'message': 'File uploaded successfully!',
             'filename': filename,
             'filepath': filepath
         })
     else:
         return jsonify({'error': 'File type not allowed'}), 400
 
-# Yüklenen dosyaları statik olarak sunmak için endpoint
+# Endpoint to serve uploaded files
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-# Not bırakma endpoint'i
+# Note submission endpoint
 @app.route('/submit_note', methods=['POST'])
 def submit_note():
     name = request.form.get('name')
@@ -92,7 +91,7 @@ def submit_note():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         video.save(filepath)
 
-        # JSON formatında notu kaydet
+        # Save note in JSON format
         note_data = {
             'name': name,
             'note': note,
@@ -101,22 +100,22 @@ def submit_note():
 
         notes_file = os.path.join(UPLOAD_FOLDER, 'notes.json')
 
-        # Mevcut notları yükle
+        # Load existing notes
         if os.path.exists(notes_file):
             with open(notes_file, 'r') as f:
                 notes = json.load(f)
         else:
             notes = []
 
-        # Yeni notu ekle
+        # Add new note
         notes.append(note_data)
 
-        # Notları kaydet
+        # Save notes
         with open(notes_file, 'w') as f:
             json.dump(notes, f, indent=4)
 
         return jsonify({
-            'message': 'Not başarıyla kaydedildi!',
+            'message': 'Note saved successfully!',
             'note': note_data
         })
     else:
